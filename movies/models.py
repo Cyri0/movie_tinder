@@ -1,6 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import User
-# Create your models here.
+
+########################
+
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+########################
+
 
 class Director(models.Model):
     name = models.CharField(max_length=255)
@@ -22,4 +29,28 @@ class Movie(models.Model):
 class Rating(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    stars = models.IntegerField()
+
+    star_choices = [
+        (1,"*"),
+        (2,"**"),
+        (3,"***"),
+        (4,"****"),
+        (5,"*****")
+    ]
+    
+    stars = models.IntegerField(choices=star_choices)
+
+
+@receiver(post_save, sender=Rating)
+def updateMoveRating(sender, instance, **kwargs):
+    movie = instance.movie
+
+    sum = 0
+    count = 0
+
+    for rating in Rating.objects.all():
+        sum += rating.stars
+        count += 1
+    
+    movie.average_rate = sum / count
+    movie.save()
