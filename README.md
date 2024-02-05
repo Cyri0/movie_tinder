@@ -4,7 +4,7 @@
 
 `movie-venv\Scripts\activate`
 
-ha megjelenik a (cocktail-venv) a konzolon akkor működött
+ha megjelenik a (movie-venv) a konzolon akkor működött
 
 `git clone https://github.com/Cyri0/movie_tinder.git`
 
